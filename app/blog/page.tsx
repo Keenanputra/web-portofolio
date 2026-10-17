@@ -11,7 +11,7 @@ export default function BlogPage() {
   const posts = getAllPosts();
 
   return (
-    <div className="py-12">
+    <div className="mx-auto max-w-4xl px-4 sm:px-6 py-12">
       <header className="mb-10">
         <Link
           href="/"

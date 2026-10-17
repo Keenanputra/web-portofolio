@@ -32,7 +32,7 @@ export default function PostPage({ params }: PageProps) {
   }
 
   return (
-    <article className="py-12">
+    <article className="mx-auto max-w-2xl px-4 sm:px-6 py-12">
       <header className="mb-10">
         <Link
           href="/blog"

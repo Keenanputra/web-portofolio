@@ -2,79 +2,93 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, Terminal } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
+import { siteConfig } from '@/lib/site';
+
+const navLinks = [
+  { name: 'Perkenalan', href: '/#perkenalan' },
+  { name: 'Catatan', href: '/#catatan' },
+  { name: 'Skills', href: '/#skills' },
+  { name: 'Kontak', href: '/#kontak' },
+];
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
-  const navLinks = [
-    { name: 'Tentang', href: '#about' },
-    { name: 'Skills', href: '#skills' },
-    { name: 'Dokumentasi', href: '#blog' },
-    { name: 'Kontak', href: '#contact' },
-  ];
-
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-md">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-        <Link 
-          href="/" 
-          className="flex items-center gap-2 font-mono font-semibold text-zinc-100 hover:text-zinc-300 transition-colors"
+    <header className="sticky top-0 z-50 border-b border-zinc-800/60 bg-zinc-950/70 backdrop-blur-xl">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+        <Link
+          href="/"
+          className="flex items-center gap-2 text-zinc-50 font-semibold tracking-tight"
         >
-          <Terminal className="w-5 h-5 text-zinc-400" />
-          <span>keenan.dev</span>
+          <span className="grid place-items-center w-7 h-7 rounded-md border border-zinc-700 bg-zinc-900 text-xs font-bold">
+            K
+          </span>
+          <span>{siteConfig.name}</span>
         </Link>
 
-        {/* Desktop Links */}
-        <nav className="hidden sm:flex items-center gap-6">
+        <nav className="hidden md:flex items-center gap-7 text-sm text-zinc-400">
           {navLinks.map((link) => (
-            <a
+            <Link
               key={link.name}
               href={link.href}
-              className="text-sm text-zinc-400 hover:text-zinc-100 transition-colors"
+              className="hover:text-zinc-100 transition-colors"
             >
               {link.name}
-            </a>
+            </Link>
           ))}
-          <Link
-            href="/blog"
-            className="text-sm font-medium px-3 py-1.5 rounded-md bg-zinc-800 text-zinc-200 hover:bg-zinc-700 hover:text-white transition-colors"
-          >
-            Blog
-          </Link>
         </nav>
 
-        {/* Mobile Menu Toggle */}
+        <div className="hidden md:flex items-center gap-4">
+          <Link
+            href={siteConfig.github}
+            target="_blank"
+            rel="noreferrer"
+            className="text-sm text-zinc-400 hover:text-zinc-100 transition-colors"
+          >
+            GitHub
+          </Link>
+          <Link
+            href="/#kontak"
+            className="px-4 py-2 rounded-full bg-white text-zinc-950 text-sm font-medium hover:bg-zinc-200 transition-colors"
+          >
+            Hubungi
+          </Link>
+        </div>
+
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="sm:hidden p-3 -mr-3 text-zinc-400 hover:text-zinc-100 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400"
+          className="md:hidden p-3 -mr-3 text-zinc-300 hover:text-zinc-50 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400"
           aria-label="Buka menu"
           aria-expanded={isOpen}
           aria-controls="mobile-menu"
         >
-          {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
       </div>
 
-      {/* Mobile Dropdown */}
       {isOpen && (
-        <div id="mobile-menu" className="sm:hidden border-b border-zinc-800 bg-zinc-950 px-4 py-4 space-y-1">
+        <div
+          id="mobile-menu"
+          className="md:hidden border-t border-zinc-800/60 bg-zinc-950 px-4 py-4 space-y-1"
+        >
           {navLinks.map((link) => (
-            <a
+            <Link
               key={link.name}
               href={link.href}
               onClick={() => setIsOpen(false)}
-              className="block text-zinc-400 hover:text-zinc-100 py-3 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400"
+              className="block text-zinc-300 hover:text-zinc-50 py-3 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400"
             >
               {link.name}
-            </a>
+            </Link>
           ))}
           <Link
-            href="/blog"
+            href="/#kontak"
             onClick={() => setIsOpen(false)}
-            className="block w-full text-center text-sm font-medium px-3 py-3 rounded-md bg-zinc-800 text-zinc-200 hover:bg-zinc-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400"
+            className="block w-full text-center px-4 py-3 rounded-full bg-white text-zinc-950 text-sm font-medium hover:bg-zinc-200 transition-colors"
           >
-            Blog & Catatan
+            Hubungi
           </Link>
         </div>
       )}

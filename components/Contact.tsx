@@ -9,25 +9,31 @@ const contacts = [
 
 export default function Contact() {
   return (
-    <section id="contact" className="py-16 border-t border-zinc-900 scroll-mt-20">
-      <h2 className="text-xs font-mono uppercase tracking-widest text-zinc-400 mb-6">
+    <section id="kontak" className="relative px-4 sm:px-6 py-24 sm:py-32 text-center scroll-mt-20">
+      <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-zinc-400">
         Kontak
-      </h2>
-      <p className="text-zinc-400 leading-relaxed max-w-2xl mb-8">
-        Terbuka untuk diskusi, masukan, atau tawaran belajar bersama.
-        Silakan hubungi saya lewat salah satu kanal di bawah.
       </p>
-      <ul className="flex flex-col sm:flex-row gap-3">
+
+      <h2 className="mx-auto mt-6 max-w-3xl text-3xl sm:text-5xl font-medium leading-[1.12] tracking-tight text-zinc-50">
+        Terbuka untuk <span className="font-display">Belajar Bersama</span>
+      </h2>
+
+      <p className="mx-auto mt-6 max-w-xl text-sm sm:text-base leading-relaxed text-zinc-400">
+        Terbuka untuk diskusi, masukan, atau tawaran belajar bersama. Silakan
+        hubungi saya lewat salah satu kanal di bawah.
+      </p>
+
+      <ul className="mx-auto mt-9 flex max-w-md flex-col sm:max-w-none sm:flex-row items-stretch sm:items-center justify-center gap-3">
         {contacts.map(({ label, href, icon: Icon }) => (
           <li key={label}>
             <a
               href={href}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-3 rounded-lg border border-zinc-800 text-zinc-300 hover:bg-zinc-900 hover:text-zinc-100 transition-colors"
+              className="inline-flex w-full items-center justify-center gap-2 px-6 py-3 rounded-full border border-zinc-700 text-zinc-200 text-sm font-medium hover:bg-zinc-900 transition-colors"
             >
               <Icon className="w-4 h-4" />
-              <span className="text-sm">{label}</span>
+              <span>{label}</span>
             </a>
           </li>
         ))}
