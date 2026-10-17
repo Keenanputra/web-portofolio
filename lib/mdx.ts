@@ -21,23 +21,30 @@ export function getAllPosts(): Post[] {
   const fileNames = fs.readdirSync(postsDirectory);
   const allPostsData = fileNames
     .filter((fileName) => fileName.endsWith('.mdx') || fileName.endsWith('.md'))
-    .map((fileName) => {
-      const slug = fileName.replace(/\.mdx?$/, '');
-      const fullPath = path.join(postsDirectory, fileName);
-      const fileContents = fs.readFileSync(fullPath, 'utf8');
-      const { data, content } = matter(fileContents);
+    .flatMap((fileName) => {
+      try {
+        const slug = fileName.replace(/\.mdx?$/, '');
+        const fullPath = path.join(postsDirectory, fileName);
+        const fileContents = fs.readFileSync(fullPath, 'utf8');
+        const { data, content } = matter(fileContents);
 
-      return {
-        slug,
-        title: data.title || 'Untitled Post',
-        date: data.date || '2026-01-01',
-        description: data.description || '',
-        tags: Array.isArray(data.tags) ? data.tags : [],
-        content,
-      };
+        return [
+          {
+            slug,
+            title: data.title || 'Untitled Post',
+            date: data.date || '1970-01-01',
+            description: data.description || '',
+            tags: Array.isArray(data.tags) ? data.tags : [],
+            content,
+          },
+        ];
+      } catch {
+        // Lewati file dengan frontmatter tidak valid agar build tidak gagal.
+        return [];
+      }
     });
 
-  return allPostsData.sort((a, b) => (a.date < b.date ? 1 : -1));
+  return allPostsData.sort((a, b) => b.date.localeCompare(a.date));
 }
 
 export function getPostBySlug(slug: string): Post | null {
@@ -60,7 +67,7 @@ export function getPostBySlug(slug: string): Post | null {
     return {
       slug,
       title: data.title || 'Untitled Post',
-      date: data.date || '2026-01-01',
+      date: data.date || '1970-01-01',
       description: data.description || '',
       tags: Array.isArray(data.tags) ? data.tags : [],
       content,

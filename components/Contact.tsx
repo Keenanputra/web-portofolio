@@ -10,7 +10,7 @@ const contacts = [
 export default function Contact() {
   return (
     <section id="contact" className="py-16 border-t border-zinc-900 scroll-mt-20">
-      <h2 className="text-xs font-mono uppercase tracking-widest text-zinc-500 mb-6">
+      <h2 className="text-xs font-mono uppercase tracking-widest text-zinc-400 mb-6">
         Kontak
       </h2>
       <p className="text-zinc-400 leading-relaxed max-w-2xl mb-8">

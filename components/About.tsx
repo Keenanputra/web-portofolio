@@ -1,7 +1,7 @@
 export default function About() {
   return (
     <section id="about" className="py-16 border-t border-zinc-900 scroll-mt-20">
-      <h2 className="text-xs font-mono uppercase tracking-widest text-zinc-500 mb-6">
+      <h2 className="text-xs font-mono uppercase tracking-widest text-zinc-400 mb-6">
         Tentang
       </h2>
       <div className="space-y-4 text-zinc-400 leading-relaxed max-w-2xl">

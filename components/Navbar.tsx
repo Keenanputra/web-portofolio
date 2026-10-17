@@ -47,8 +47,10 @@ export default function Navbar() {
         {/* Mobile Menu Toggle */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="sm:hidden p-2 text-zinc-400 hover:text-zinc-100 focus:outline-none"
-          aria-label="Toggle menu"
+          className="sm:hidden p-3 -mr-3 text-zinc-400 hover:text-zinc-100 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400"
+          aria-label="Buka menu"
+          aria-expanded={isOpen}
+          aria-controls="mobile-menu"
         >
           {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
@@ -56,13 +58,13 @@ export default function Navbar() {
 
       {/* Mobile Dropdown */}
       {isOpen && (
-        <div className="sm:hidden border-b border-zinc-800 bg-zinc-950 px-4 py-4 space-y-3">
+        <div id="mobile-menu" className="sm:hidden border-b border-zinc-800 bg-zinc-950 px-4 py-4 space-y-1">
           {navLinks.map((link) => (
             <a
               key={link.name}
               href={link.href}
               onClick={() => setIsOpen(false)}
-              className="block text-zinc-400 hover:text-zinc-100 py-1"
+              className="block text-zinc-400 hover:text-zinc-100 py-3 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400"
             >
               {link.name}
             </a>
@@ -70,7 +72,7 @@ export default function Navbar() {
           <Link
             href="/blog"
             onClick={() => setIsOpen(false)}
-            className="block w-full text-center text-sm font-medium px-3 py-2 rounded-md bg-zinc-800 text-zinc-200 hover:bg-zinc-700 transition-colors"
+            className="block w-full text-center text-sm font-medium px-3 py-3 rounded-md bg-zinc-800 text-zinc-200 hover:bg-zinc-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400"
           >
             Blog & Catatan
           </Link>

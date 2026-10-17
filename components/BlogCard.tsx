@@ -22,8 +22,8 @@ export default function BlogCard({ post }: BlogCardProps) {
       className="group block p-5 rounded-xl border border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900 hover:border-zinc-700 transition-colors"
     >
       <div className="flex items-center justify-between gap-4 mb-2">
-        <time className="font-mono text-xs text-zinc-500">{formatDate(post.date)}</time>
-        <span className="text-xs text-zinc-500 group-hover:text-zinc-300 transition-colors">
+        <time className="font-mono text-xs text-zinc-400">{formatDate(post.date)}</time>
+        <span className="text-xs text-zinc-400 group-hover:text-zinc-300 transition-colors">
           Baca
         </span>
       </div>
@@ -40,7 +40,7 @@ export default function BlogCard({ post }: BlogCardProps) {
           {post.tags.map((tag) => (
             <li
               key={tag}
-              className="text-xs font-mono text-zinc-500 border border-zinc-800 rounded px-2 py-0.5"
+              className="text-xs font-mono text-zinc-400 border border-zinc-800 rounded px-2 py-0.5"
             >
               {tag}
             </li>

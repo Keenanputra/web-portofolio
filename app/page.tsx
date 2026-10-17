@@ -25,7 +25,7 @@ export default function Home() {
       <section id="blog" className="py-16 border-t border-zinc-900 scroll-mt-20">
         <FadeIn>
           <div className="flex items-end justify-between gap-4 mb-8">
-            <h2 className="text-xs font-mono uppercase tracking-widest text-zinc-500">
+            <h2 className="text-xs font-mono uppercase tracking-widest text-zinc-400">
               Catatan Praktek
             </h2>
             <Link
@@ -38,7 +38,7 @@ export default function Home() {
         </FadeIn>
 
         {posts.length === 0 ? (
-          <p className="text-zinc-500 text-sm">
+          <p className="text-zinc-400 text-sm">
             Belum ada catatan. Dokumentasi praktek akan muncul di sini.
           </p>
         ) : (

@@ -15,7 +15,7 @@ export default function BlogPage() {
       <header className="mb-10">
         <Link
           href="/"
-          className="text-sm text-zinc-500 hover:text-zinc-300 transition-colors"
+          className="text-sm text-zinc-400 hover:text-zinc-300 transition-colors"
         >
           Kembali ke beranda
         </Link>
@@ -29,7 +29,7 @@ export default function BlogPage() {
       </header>
 
       {posts.length === 0 ? (
-        <p className="text-zinc-500 text-sm">
+        <p className="text-zinc-400 text-sm">
           Belum ada catatan. Dokumentasi praktek akan muncul di sini.
         </p>
       ) : (

@@ -12,7 +12,7 @@ const skillGroups = [
 export default function Skills() {
   return (
     <section id="skills" className="py-16 border-t border-zinc-900 scroll-mt-20">
-      <h2 className="text-xs font-mono uppercase tracking-widest text-zinc-500 mb-8">
+      <h2 className="text-xs font-mono uppercase tracking-widest text-zinc-400 mb-8">
         Yang Sedang Dipelajari
       </h2>
       <div className="space-y-8">

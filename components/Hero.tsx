@@ -3,7 +3,7 @@ import { siteConfig } from '@/lib/site';
 export default function Hero() {
   return (
     <section className="min-h-[70vh] flex flex-col justify-center py-16">
-      <p className="font-mono text-xs uppercase tracking-widest text-zinc-500 mb-4">
+      <p className="font-mono text-xs uppercase tracking-widest text-zinc-400 mb-4">
         {siteConfig.role}
       </p>
       <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-zinc-100 leading-tight">

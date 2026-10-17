@@ -45,7 +45,7 @@ export default function PostPage({ params }: PageProps) {
       <header className="mb-10">
         <Link
           href="/blog"
-          className="text-sm text-zinc-500 hover:text-zinc-300 transition-colors"
+          className="text-sm text-zinc-400 hover:text-zinc-300 transition-colors"
         >
           Kembali ke catatan
         </Link>
@@ -53,13 +53,13 @@ export default function PostPage({ params }: PageProps) {
           {post.title}
         </h1>
         <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
-          <time className="font-mono text-xs text-zinc-500">{formatDate(post.date)}</time>
+          <time className="font-mono text-xs text-zinc-400">{formatDate(post.date)}</time>
           {post.tags.length > 0 && (
             <ul className="flex flex-wrap gap-2">
               {post.tags.map((tag) => (
                 <li
                   key={tag}
-                  className="text-xs font-mono text-zinc-500 border border-zinc-800 rounded px-2 py-0.5"
+                  className="text-xs font-mono text-zinc-400 border border-zinc-800 rounded px-2 py-0.5"
                 >
                   {tag}
                 </li>
