@@ -1,0 +1,34 @@
+---
+title: "Troubleshoot VLAN Tagging dan Trunking Cisco Catalyst"
+date: "2026-10-10"
+description: "Analisis masalah interface VLAN mismatch dan cara menyelesaikan isolasi traffic antar divisi pada switch Cisco."
+tags: ["Cisco", "VLAN", "Troubleshoot", "TKJ"]
+---
+
+# Troubleshoot VLAN Tagging & Trunking
+
+Catatan isolasi masalah saat praktek membuat 2 VLAN terpisah pada switch Cisco Catalyst 2960.
+
+## Kasus Problem
+PC di VLAN 10 (Siswa) tidak bisa komunikasi dengan Default Gateway di Router Sub-interface.
+
+## Root Cause
+Port 802.1Q trunk antara Switch dan Router belum di-allow untuk VLAN 10.
+
+## Solusi Configuration CLI
+
+```ios
+Switch# configure terminal
+Switch(config)# interface gigabitEthernet 0/1
+Switch(config-if)# switchport mode trunk
+Switch(config-if)# switchport trunk allowed vlan 10,20
+Switch(config-if)# no shutdown
+```
+
+## Verifikasi Command
+
+```ios
+Switch# show interfaces trunk
+```
+
+Semua VLAN terdaftar dengan status `forwarding`. Masalah terselesaikan.

@@ -1,0 +1,51 @@
+---
+title: "Konfigurasi Basic Router MikroTik untuk Jaringan Lab SMK"
+date: "2026-10-15"
+description: "Catatan langkah-langkah konfigurasi IP Address, DHCP Server, dan NAT Masquerade pada MikroTik RB951 untuk akses internet lab."
+tags: ["MikroTik", "TKJ", "Networking", "CLI"]
+---
+
+# Konfigurasi Basic Router MikroTik
+
+Dokumentasi praktek konfigurasi dasar RouterBoard MikroTik RB951 di lab sekolah.
+
+## Topologi Sederhana
+
+- **ether1**: Connected to ISP (DHCP Client)
+- **ether2**: Local LAN (192.168.10.1/24)
+
+## Langkah Konfigurasi CLI
+
+### 1. Setting Identity Router
+```routeros
+/system identity set name=Router-Lab-Keenan
+```
+
+### 2. Konfigurasi DHCP Client di ether1
+```routeros
+/ip dhcp-client add interface=ether1 disabled=no
+```
+
+### 3. Setting IP Address Local
+```routeros
+/ip address add address=192.168.10.1/24 interface=ether2
+```
+
+### 4. Setting DHCP Server untuk Client
+```routeros
+/ip dhcp-server setup
+```
+
+### 5. Firewall NAT Masquerade
+```routeros
+/ip firewall nat add chain=srcnat out-interface=ether1 action=masquerade
+```
+
+## Pengujian
+
+Ping Google DNS dari router:
+```routeros
+/ping 8.8.8.8
+```
+
+Koneksi berhasil dengan time average 15ms.
