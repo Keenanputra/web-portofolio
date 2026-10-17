@@ -1,19 +1,10 @@
 import Link from 'next/link';
 import type { Post } from '@/lib/mdx';
+import { formatDate } from '@/lib/formatDate';
 
 type BlogCardProps = {
   post: Post;
 };
-
-function formatDate(value: string): string {
-  const parsed = new Date(value);
-  if (Number.isNaN(parsed.getTime())) return value;
-  return parsed.toLocaleDateString('id-ID', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  });
-}
 
 export default function BlogCard({ post }: BlogCardProps) {
   return (

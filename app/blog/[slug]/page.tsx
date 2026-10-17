@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { getAllPosts, getPostBySlug } from '@/lib/mdx';
 import { mdxComponents } from '@/components/mdx-components';
+import { formatDate } from '@/lib/formatDate';
 
 type PageProps = {
   params: { slug: string };
@@ -21,16 +22,6 @@ export function generateMetadata({ params }: PageProps) {
     title: `${post.title}: Keenan`,
     description: post.description,
   };
-}
-
-function formatDate(value: string): string {
-  const parsed = new Date(value);
-  if (Number.isNaN(parsed.getTime())) return value;
-  return parsed.toLocaleDateString('id-ID', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  });
 }
 
 export default function PostPage({ params }: PageProps) {
