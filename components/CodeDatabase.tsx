@@ -1,8 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Link from 'next/link';
-import { motion, useReducedMotion, type Variants } from 'framer-motion';
+import {
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+  useTransform,
+  type Variants,
+} from 'framer-motion';
 import type { Post } from '@/lib/mdx';
 
 type CodeDatabaseProps = {
@@ -15,6 +22,16 @@ const MAX_CARDS = 3;
 // Offset disetel sedikit di atasnya supaya judul kartu belakang terbaca utuh.
 const REST_OFFSET = 56;
 const SPREAD_OFFSET = 84;
+
+// Tilt maksimum (derajat) dan geser paralaks per lapisan (px).
+const TILT_MAX = 9;
+const PARALLAX_PER_LAYER = 6;
+
+const TILT_SPRING = { stiffness: 150, damping: 20, mass: 0.6 };
+
+function clamp(value: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, value));
+}
 
 function Triangle() {
   return (
@@ -80,6 +97,33 @@ export default function CodeDatabase({ posts }: CodeDatabaseProps) {
   const reduceMotion = useReducedMotion();
   const cards = posts.slice(0, MAX_CARDS);
 
+  const deckRef = useRef<HTMLDivElement>(null);
+  const rectRef = useRef<{
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+  } | null>(null);
+
+  // Posisi kursor ternormalisasi (-1 sampai 1) terhadap area deck.
+  const nx = useMotionValue(0);
+  const ny = useMotionValue(0);
+  const snx = useSpring(nx, TILT_SPRING);
+  const sny = useSpring(ny, TILT_SPRING);
+
+  // Seluruh tumpukan miring sebagai satu unit.
+  const rotateY = useTransform(snx, (value) => value * TILT_MAX);
+  const rotateX = useTransform(sny, (value) => -value * TILT_MAX);
+
+  // Paralaks berlapis: makin ke belakang, geserannya makin besar.
+  // Dibuat eksplisit (bukan di dalam loop) supaya aman terhadap rules-of-hooks.
+  const layerX1 = useTransform(snx, (value) => value * PARALLAX_PER_LAYER);
+  const layerX2 = useTransform(snx, (value) => value * PARALLAX_PER_LAYER * 2);
+  const layerY1 = useTransform(sny, (value) => value * PARALLAX_PER_LAYER);
+  const layerY2 = useTransform(sny, (value) => value * PARALLAX_PER_LAYER * 2);
+  const layerX = [0, layerX1, layerX2];
+  const layerY = [0, layerY1, layerY2];
+
   if (cards.length === 0) {
     return (
       <div className="mx-auto mt-16 max-w-md">
@@ -96,46 +140,89 @@ export default function CodeDatabase({ posts }: CodeDatabaseProps) {
     rest: {
       y: -index * REST_OFFSET,
       scale: 1 - index * 0.045,
-      rotateX: index === 0 ? 0 : 2,
       opacity: 1 - index * 0.1,
     },
     spread: {
       y: -index * SPREAD_OFFSET,
       scale: 1 - index * 0.015,
-      rotateX: index === 0 ? 0 : 2,
       opacity: 1 - index * 0.03,
     },
   });
 
+  function measureDeck() {
+    const element = deckRef.current;
+    if (!element) return;
+    const rect = element.getBoundingClientRect();
+    // Area mengintip kartu belakang berada di atas kartu depan, jadi
+    // titik pusat tilt diperluas ke atas supaya terasa pas di tengah tumpukan.
+    const peek = Math.max(0, cards.length - 1) * REST_OFFSET;
+    rectRef.current = {
+      left: rect.left,
+      top: rect.top - peek,
+      width: rect.width,
+      height: rect.height + peek,
+    };
+  }
+
+  function handleEnter() {
+    measureDeck();
+    setActive(true);
+  }
+
+  function handleMove(event: React.MouseEvent<HTMLDivElement>) {
+    if (reduceMotion) return;
+    const rect = rectRef.current;
+    if (!rect) return;
+    const nextX = clamp(((event.clientX - rect.left) / rect.width - 0.5) * 2, -1, 1);
+    const nextY = clamp(((event.clientY - rect.top) / rect.height - 0.5) * 2, -1, 1);
+    nx.set(nextX);
+    ny.set(nextY);
+  }
+
+  function handleLeave() {
+    rectRef.current = null;
+    setActive(false);
+    // Spring akan meluncurkan tilt dan paralaks kembali ke datar.
+    nx.set(0);
+    ny.set(0);
+  }
+
   return (
-    <div className="relative mx-auto mt-16 md:mt-28 max-w-md [perspective:1400px]">
-      {/* Deck untuk md ke atas: kartu bertumpuk dengan header terlihat. */}
-      <ul
-        className="relative hidden md:block md:mt-24"
-        onMouseEnter={() => setActive(true)}
-        onMouseLeave={() => setActive(false)}
+    <div className="relative mx-auto mt-16 md:mt-28 max-w-md [perspective:1200px]">
+      <motion.div
+        ref={deckRef}
+        className="hidden md:block"
+        style={{ rotateX, rotateY, transformOrigin: 'center' }}
+        onMouseEnter={handleEnter}
+        onMouseMove={handleMove}
+        onMouseLeave={handleLeave}
         onFocusCapture={() => setActive(true)}
         onBlurCapture={() => setActive(false)}
       >
-        {cards.map((post, index) => (
-          <motion.li
-            key={post.slug}
-            className={index === 0 ? 'relative' : 'absolute inset-x-0 top-0'}
-            style={{
-              zIndex: cards.length - index,
-              transformOrigin: 'top center',
-            }}
-            initial="rest"
-            animate={state}
-            variants={cardVariants(index)}
-            transition={{ type: 'spring', stiffness: 260, damping: 26, mass: 0.8 }}
-          >
-            <NoteCard post={post} />
-          </motion.li>
-        ))}
-      </ul>
+        {/* Deck untuk md ke atas: kartu bertumpuk dengan header terlihat. */}
+        <ul className="relative md:mt-24">
+          {cards.map((post, index) => (
+            <motion.li
+              key={post.slug}
+              className={index === 0 ? 'relative' : 'absolute inset-x-0 top-0'}
+              style={{
+                zIndex: cards.length - index,
+                transformOrigin: 'top center',
+              }}
+              initial="rest"
+              animate={state}
+              variants={cardVariants(index)}
+              transition={{ type: 'spring', stiffness: 260, damping: 26, mass: 0.8 }}
+            >
+              <motion.div style={{ x: layerX[index], y: layerY[index] }}>
+                <NoteCard post={post} />
+              </motion.div>
+            </motion.li>
+          ))}
+        </ul>
+      </motion.div>
 
-      {/* List sederhana untuk mobile, tanpa tumpukan. */}
+      {/* List sederhana untuk mobile, tanpa tumpukan dan tanpa tilt. */}
       <ul className="space-y-3 md:hidden">
         {cards.map((post) => (
           <li key={post.slug}>
