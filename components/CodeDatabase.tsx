@@ -29,6 +29,11 @@ const PARALLAX_PER_LAYER = 6;
 
 const TILT_SPRING = { stiffness: 150, damping: 20, mass: 0.6 };
 
+// Saat pengunjung memakai setelan "prefers-reduced-motion", efek tetap
+// dijalankan (tidak dimatikan) tetapi bisa diredam lewat faktor ini.
+// 1 = penuh, misal 0.4 = lebih halus.
+const REDUCED_MOTION_FACTOR = 1;
+
 function clamp(value: number, min: number, max: number) {
   return Math.min(max, Math.max(min, value));
 }
@@ -97,6 +102,10 @@ export default function CodeDatabase({ posts }: CodeDatabaseProps) {
   const reduceMotion = useReducedMotion();
   const cards = posts.slice(0, MAX_CARDS);
 
+  // Kekuatan efek: penuh untuk pengunjung biasa, bisa diredam untuk
+  // pengunjung dengan setelan reduced motion.
+  const intensity = reduceMotion ? REDUCED_MOTION_FACTOR : 1;
+
   const deckRef = useRef<HTMLDivElement>(null);
   const rectRef = useRef<{
     left: number;
@@ -134,7 +143,7 @@ export default function CodeDatabase({ posts }: CodeDatabaseProps) {
     );
   }
 
-  const state = active && !reduceMotion ? 'spread' : 'rest';
+  const state = active ? 'spread' : 'rest';
 
   const cardVariants = (index: number): Variants => ({
     rest: {
@@ -170,13 +179,14 @@ export default function CodeDatabase({ posts }: CodeDatabaseProps) {
   }
 
   function handleMove(event: React.MouseEvent<HTMLDivElement>) {
-    if (reduceMotion) return;
     const rect = rectRef.current;
     if (!rect) return;
     const nextX = clamp(((event.clientX - rect.left) / rect.width - 0.5) * 2, -1, 1);
     const nextY = clamp(((event.clientY - rect.top) / rect.height - 0.5) * 2, -1, 1);
-    nx.set(nextX);
-    ny.set(nextY);
+    // Faktor kekuatan diterapkan di sumber supaya semua turunan
+    // (tilt dan paralaks) ikut meredam saat reduced motion.
+    nx.set(nextX * intensity);
+    ny.set(nextY * intensity);
   }
 
   function handleLeave() {
