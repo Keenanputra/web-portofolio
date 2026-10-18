@@ -11,6 +11,11 @@ type CodeDatabaseProps = {
 
 const MAX_CARDS = 3;
 
+// Tinggi header kartu (py-4 + text-sm) sekitar 53px.
+// Offset disetel sedikit di atasnya supaya judul kartu belakang terbaca utuh.
+const REST_OFFSET = 56;
+const SPREAD_OFFSET = 84;
+
 function Triangle() {
   return (
     <span
@@ -41,24 +46,31 @@ function NoteCard({ post }: { post: Post }) {
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="block text-left rounded-2xl border border-zinc-800 bg-gradient-to-b from-zinc-900/90 to-zinc-950/95 p-6 shadow-[0_40px_120px_-50px_rgba(0,0,0,0.95)] backdrop-blur transition-colors hover:border-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400"
+      className="group block text-left rounded-2xl border border-zinc-800 bg-gradient-to-b from-zinc-900/90 to-zinc-950/95 shadow-[0_40px_120px_-50px_rgba(0,0,0,0.95)] backdrop-blur transition-colors hover:border-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400"
     >
-      <div className="flex items-center gap-3">
+      {/* Header: satu-satunya bagian yang terlihat saat kartu bertumpuk. */}
+      <div className="flex items-center gap-3 px-6 py-4 border-b border-zinc-800/70">
         <Triangle />
-        <span className="text-sm font-semibold uppercase tracking-wide text-zinc-100">
+        <span className="min-w-0 truncate text-sm font-semibold uppercase tracking-wide text-zinc-100">
           {post.title}
         </span>
       </div>
-      {post.description && (
-        <p className="mt-3 text-sm leading-relaxed text-zinc-400 line-clamp-2">
-          {post.description}
-        </p>
-      )}
-      <div className="mt-5 flex items-end justify-between gap-4">
-        <Sparkline />
-        <span className="text-xs text-zinc-400">Baca</span>
+
+      {/* Body: hanya terlihat penuh pada kartu depan. */}
+      <div className="px-6 py-5">
+        {post.description && (
+          <p className="text-sm leading-relaxed text-zinc-400 line-clamp-2">
+            {post.description}
+          </p>
+        )}
+        <div className="mt-5 flex items-end justify-between gap-4">
+          <Sparkline />
+          <span className="text-xs text-zinc-400 transition-colors group-hover:text-zinc-200">
+            Baca
+          </span>
+        </div>
+        <div className="mt-5 border-t border-dashed border-zinc-800" />
       </div>
-      <div className="mt-5 border-t border-dashed border-zinc-800" />
     </Link>
   );
 }
@@ -82,24 +94,24 @@ export default function CodeDatabase({ posts }: CodeDatabaseProps) {
 
   const cardVariants = (index: number): Variants => ({
     rest: {
-      y: -index * 14,
-      scale: 1 - index * 0.05,
+      y: -index * REST_OFFSET,
+      scale: 1 - index * 0.045,
       rotateX: index === 0 ? 0 : 2,
-      opacity: 1 - index * 0.12,
+      opacity: 1 - index * 0.1,
     },
     spread: {
-      y: -index * 44,
-      scale: 1 - index * 0.02,
+      y: -index * SPREAD_OFFSET,
+      scale: 1 - index * 0.015,
       rotateX: index === 0 ? 0 : 2,
-      opacity: 1 - index * 0.04,
+      opacity: 1 - index * 0.03,
     },
   });
 
   return (
-    <div className="relative mx-auto mt-16 md:mt-32 max-w-md [perspective:1400px]">
-      {/* Deck untuk md ke atas: kartu bertumpuk dengan offset. */}
+    <div className="relative mx-auto mt-16 md:mt-28 max-w-md [perspective:1400px]">
+      {/* Deck untuk md ke atas: kartu bertumpuk dengan header terlihat. */}
       <ul
-        className="relative hidden md:block"
+        className="relative hidden md:block md:mt-24"
         onMouseEnter={() => setActive(true)}
         onMouseLeave={() => setActive(false)}
         onFocusCapture={() => setActive(true)}
