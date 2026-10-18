@@ -3,9 +3,9 @@
 
 export const siteConfig = {
   name: 'Keenan',
-  role: 'Pelajar SMK TKJ',
+  role: 'Pelajar SMK WIDYA KARYA TAMAN SIDOARJO',
   url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
-  github: 'https://github.com/username',
-  instagram: 'https://instagram.com/username',
-  email: 'mailto:keenan@example.com',
+  github: 'https://github.com/Keenanputra',
+  instagram: 'https://instagram.com/keenandkiri',
+  email: 'mailto:akunkeenan13@gmail.com',
 };
