@@ -1,4 +1,4 @@
-import { Github, Instagram, Mail } from 'lucide-react';
+import { Github, Instagram, Mail, Twitter } from 'lucide-react';
 import { siteConfig } from '@/lib/site';
 
 const contacts = [

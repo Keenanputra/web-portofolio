@@ -12,7 +12,7 @@ export default function Hero() {
       </h1>
 
       <p className="mx-auto mt-6 max-w-xl text-sm sm:text-base leading-relaxed text-zinc-400">
-        Saya Keenan, pelajar SMK Widya Karya Taman Sidoarjo. Saya
+        Saya Keenan, pelajar SMK Sidoarjo. Saya
         membangun web pribadi sambil mendokumentasikan setiap praktek jaringan
         dan eksperimen kode yang saya kerjakan.
       </p>
